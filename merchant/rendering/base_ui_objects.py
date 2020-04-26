@@ -5,6 +5,8 @@ from merchant.rendering import colors
 from merchant.rendering import text
 from merchant.rendering import renderer
 
+from merchant.events import listeners
+
 
 class Box(scene.Object):
 
@@ -19,7 +21,7 @@ class Box(scene.Object):
         pygame.draw.rect(display, self.border_color, rect, self.border_width)
 
 
-class Button(Box):
+class Button(Box, listeners.ClickTarget):
 
     def __init__(self, position: scene.Position, dimensions: shapes.Rectangle, text: str = ""):
         super().__init__(position, dimensions, scene.UI_LAYER)
@@ -41,3 +43,7 @@ class Button(Box):
         x = (self.dimensions.width - text_size[0]) / 2
         y = (self.dimensions.height - text_size[1]) / 2
         text.render_text(text.load_basic_font(), self.position.shift_by(x, y), display, self.text)
+
+    def check_hit(self, event: pygame.event.Event):
+      return self.dimensions.check_hit(self.position, event)
+
